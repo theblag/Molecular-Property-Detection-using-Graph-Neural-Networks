@@ -34,9 +34,9 @@ Over 85% of preclinical drug candidates fail during clinical trials, with a subs
 
 ### 2.1 Datasets and Input Representation
 The system is evaluated across three standard physical chemistry benchmarks sourced from the MoleculeNet repository:
-1. **Delaney ESOL (N = 1,128):** Measures aqueous solubility (log S) in log10(mol/L).
-2. **FreeSolv / SAMPL (N = 642):** Measures experimental and alchemical hydration free energy (ΔGhyd) in kcal/mol.
-3. **Lipophilicity / ChEMBL (N = 4,200):** Measures the octanol/water distribution coefficient at physiological pH 7.4 (log D7.4).
+1. **Delaney ESOL (N = 1,128):** Measures aqueous solubility (log S) in log10(mol/L). [Download Dataset](https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/delaney-processed.csv)
+2. **FreeSolv / SAMPL (N = 642):** Measures experimental and alchemical hydration free energy (ΔGhyd) in kcal/mol. [Download Dataset](https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/SAMPL.csv)
+3. **Lipophilicity / ChEMBL (N = 4,200):** Measures the octanol/water distribution coefficient at physiological pH 7.4 (log D7.4). [Download Dataset](https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/Lipophilicity.csv)
 
 The sole external input at inference time is a SMILES (Simplified Molecular Input Line Entry System) text string. From this string, our pipeline (smiles_to_graph) constructs a dual representation:
 
@@ -184,9 +184,15 @@ In Aspirin and Ibuprofen heatmaps, polar carboxylic acid (-COOH) oxygens show po
 ---
 
 ## 5. References
-1. Delaney, J. S. (2004). ESOL: Estimating Aqueous Solubility Directly from Molecular Structure. J. Chem. Inf. Comput. Sci., 44(3), 1000–1005.
-2. Kipf, T. N., & Welling, M. (2017). Semi-Supervised Classification with Graph Convolutional Networks. ICLR.
-3. Liu, Z., et al. (2024). KAN: Kolmogorov-Arnold Networks. arXiv:2404.19756.
-4. Wu, Z., et al. (2018). MoleculeNet: A Benchmark for Molecular Machine Learning. Chemical Science, 9(2), 513–530.
-5. Bickerton, G. R., et al. (2012). Quantifying the Chemical Beauty of Drugs (QED). Nature Chemistry, 4(2), 90–98.
-6. Mobley, D. L., & Guthrie, J. P. (2014). FreeSolv Database. J. Comput. Aided Mol. Des., 28(7), 711–720.
+
+### Primary Base Paper
+1. **Li, L., Zhang, Y., Wang, G., & Xia, K. (2025).** *Kolmogorov–Arnold Graph Neural Networks for Molecular Property Prediction (KA-GNN).* **Nature Machine Intelligence**, Published 11 August 2025. DOI: 10.1038/s42256-025-01087-7.
+[https://doi.org/10.1038/s42256-025-01087-7](https://doi.org/10.1038/s42256-025-01087-7)
+
+### Foundational Literature & Benchmarks
+1. Delaney, J. S. (2004). ESOL: Estimating Aqueous Solubility Directly from Molecular Structure. J. Chem. Inf. Comput. Sci., 44(3), 1000–1005. [https://doi.org/10.1021/ci034243x](https://doi.org/10.1021/ci034243x) 
+2. Kipf, T. N., & Welling, M. (2017). Semi-Supervised Classification with Graph Convolutional Networks. ICLR. [https://arxiv.org/abs/1609.02907](https://arxiv.org/abs/1609.02907)
+3. Liu, Z., et al. (2024). KAN: Kolmogorov-Arnold Networks. arXiv:2404.19756. [https://arxiv.org/abs/2404.19756](https://arxiv.org/abs/2404.19756)
+4. Wu, Z., et al. (2018). MoleculeNet: A Benchmark for Molecular Machine Learning. Chemical Science, 9(2), 513–530. [https://doi.org/10.1039/C7SC02664A](https://doi.org/10.1039/C7SC02664A)
+5. Bickerton, G. R., et al. (2012). Quantifying the Chemical Beauty of Drugs (QED). Nature Chemistry, 4(2), 90–98. [https://doi.org/10.1038/nchem.1243](https://doi.org/10.1038/nchem.1243)
+6. Mobley, D. L., & Guthrie, J. P. (2014). FreeSolv Database. J. Comput. Aided Mol. Des., 28(7), 711–720. [https://doi.org/10.1007/s10822-014-9747-x](https://doi.org/10.1007/s10822-014-9747-x)

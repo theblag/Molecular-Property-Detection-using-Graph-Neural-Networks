@@ -2,20 +2,20 @@
 ## FINAL PROJECT REPORT
 
 **Project title:** Molecular Physicochemical Property Prediction & ADMET Profiling Using Hybrid Graph Neural Networks and Kolmogorov-Arnold Networks
-**Group number:** [ ]
+**Group number:** 6
 **Group members (name and roll number):**
-1. [Name – Roll number]
-2. [Name – Roll number]
-3. [Name – Roll number]
-4. [Name – Roll number]
-5. [Name – Roll number]
+1. Aditya A - 2024BCS0038
+2. Amal Sajeev - 2024BCD0010
+3. Adithyan M Nair - 2024BCD0022
+4. Kesavan G - 2024BCs0034
+5. Gowtham Kumar C - 2024BCS0162
 
 ---
 
 ## 1. Introduction
 
 ### 1.1 Problem Statement
-In early-stage Computer-Aided Drug Discovery (CADD), evaluating a candidate molecule's Absorption, Distribution, Metabolism, Excretion, and Toxicity (ADMET) profile is as critical as measuring its biological target affinity. Key physicochemical properties—specifically aqueous solubility (log S), hydration free energy (ΔGhyd), and physiological lipophilicity (log D7.4)—govern oral bioavailability, membrane permeability, and formulation viability. Traditional experimental assays for determining these properties are expensive, low-throughput, and require physical synthesis of the compounds. While Graph Neural Networks (GNNs) have emerged as a standard computational alternative by treating molecules as topological graphs, pure message-passing architectures suffer from a fundamental physical limitation: localized neighborhood aggregation (1- to 3-hop message passing) struggles to capture whole-molecule macroscopic properties such as total molecular mass, bulk hydrophobic volume, and topological polar surface area.
+In early-stage Computer-Aided Drug Discovery (CADD), evaluating a candidate molecule's Absorption, Distribution, Metabolism, Excretion, and Toxicity (ADMET) profile is as critical as measuring its biological target affinity. Key physicochemical properties-specifically aqueous solubility (log S), hydration free energy (ΔGhyd), and physiological lipophilicity (log D7.4)-govern oral bioavailability, membrane permeability, and formulation viability. Traditional experimental assays for determining these properties are expensive, low-throughput, and require physical synthesis of the compounds. While Graph Neural Networks (GNNs) have emerged as a standard computational alternative by treating molecules as topological graphs, pure message-passing architectures suffer from a fundamental physical limitation: localized neighborhood aggregation (1- to 3-hop message passing) struggles to capture whole-molecule macroscopic properties such as total molecular mass, bulk hydrophobic volume, and topological polar surface area.
 
 ### 1.2 Project Objective
 The objective of this project is to design, implement, and benchmark a Hybrid Molecular Graph Neural Network (HybridMolecularGNN) and a Kolmogorov-Arnold Network Readout GNN (HybridMolecularKANGNN) capable of predicting key physicochemical properties directly from 2D chemical SMILES strings. Specifically, the project aims to:
@@ -65,13 +65,36 @@ Grounded in the thermodynamic principles of cavitation penalty and solvation she
 
 ### 2.2 AI Architecture and Mathematical Formulation
 
-Workflow:
-SMILES -> Graph Branch: 3x GCNConv(hidden_dim=64) + BatchNorm1d + ReLU + Dropout(0.2) -> Dual Pooling (Mean Pool: 64-d, Max Pool: 64-d -> 128-d)
-SMILES -> Tabular Branch: 5 RDKit Descriptors -> BatchNorm1d -> 5-d
-Combined Vector: Concatenation of [128-d Graph, 5-d Descriptors] -> 133-d
-Readout Head Options:
-- Option A (MLP Head): Linear(133 -> 64) -> ReLU -> Dropout(0.2) -> Linear(64 -> 1)
-- Option B (KAN Head): KANLinear(133 -> 32, 8 RBF bases) -> Dropout(0.2) -> KANLinear(32 -> 1, 8 RBF bases)
+```mermaid
+flowchart TD
+    SMILES["SMILES"]
+
+    subgraph GRAPH_BRANCH["Graph Branch"]
+        GCN["3x GCNConv(hidden_dim=64)<br>+ BatchNorm1d + ReLU + Dropout(0.2)"]
+        POOL["Dual Pooling<br>(Mean Pool: 64-d, Max Pool: 64-d -> 128-d)"]
+        GCN --> POOL
+    end
+
+    subgraph TAB_BRANCH["Tabular Branch"]
+        TAB["5 RDKit Descriptors<br>-> BatchNorm1d -> 5-d"]
+    end
+
+    SMILES --> GCN
+    SMILES --> TAB
+
+    COMBINED["Combined Vector:<br>Concatenation of (128-d Graph, 5-d Descriptors) -> 133-d"]
+
+    POOL --> COMBINED
+    TAB --> COMBINED
+
+    subgraph READOUT["Readout Head Options"]
+        OPT_A["Option A (MLP Head):<br>Linear(133 -> 64) -> ReLU -> Dropout(0.2) -> Linear(64 -> 1)"]
+        OPT_B["Option B (KAN Head):<br>KANLinear(133 -> 32, 8 RBF bases) -> Dropout(0.2) -> KANLinear(32 -> 1, 8 RBF bases)"]
+    end
+
+    COMBINED --> OPT_A
+    COMBINED --> OPT_B
+```
 
 #### 1. Graph Convolutional Message Passing
 Across 3 layers, node representations are updated using:
